@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/all.css">
+  <title>拯救咖波大作戰</title>
+  <style>
+    * {
+      font-family: 'Archivo Black', sans-serif;
+    }
+
+    body {
+      background-image: url(./images/capoobg.jfif);
+      background-size: cover;
+      background-repeat: no-repeat;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+
+
+
+    #game {
+      width: 600px;
+      height: 600px;
+      border: 8px dashed gold;
+      background: rgba(255, 255, 255, 0.7);
+      overflow: hidden;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      cursor: url(./images/potion.png), auto;
+      margin: auto;
+      box-shadow: 0 0 3px rgba(255, 255, 255);
+      /* display: none; */
+      border-radius: 10px;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    img {
+      height: 150px;
+      position: absolute;
+      user-select: none;
+      -webkit-user-drag: none;
+      -webkit-user-select: none;
+    }
+
+    .badcapoo {
+      width: 117px;
+      height: 90px;
+    }
+
+    .ghost2 {
+      width: 120px;
+      height: 120px;
+      /* 忽略點擊事件 */
+      pointer-events: none;
+    }
+
+    /* 開始遊戲前的說明 */
+    #description {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: auto;
+      border: 10px solid #593119;
+      border-radius: 30px;
+      background: #ebceaa;
+      padding: 20px 50px;
+      color: #593119;
+    }
+
+
+    #description .desc-title {
+      margin: 20px 0 0 0;
+      font-size: 2rem;
+    }
+
+    #description .desc-title:first-child {
+      font-size: 2.5rem;
+      text-shadow: 0 0 3px #593119;
+    }
+
+    #description .time-set {
+      padding: 3px;
+      border: 3px dotted red;
+      /* background: red; */
+      color: red;
+      font-weight: 900;
+      font-size: 1.5rem;
+    }
+
+    #description .desc-article .potion2 {
+      width: 25px;
+      height: 25px;
+    }
+
+    .desc-article {
+      text-align: center;
+    }
+
+    .time-left {
+      color: white;
+      margin: 30px;
+      font-size: 25px;
+      /* display: none; */
+    }
+
+
+    #btn-start {
+      margin: 10px 0 0 0;
+      font-size: 2rem;
+    }
+
+    #btn-start,
+    #btn-restart,
+    #btn-index {
+      color: white;
+      background: #D96262;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    #btn-start:hover,
+    #btn-restart:hover,
+    #btn-index:hover {
+      background: yellow;
+      color: #D96262;
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+
+    /* 記分板 */
+    .scoreboard {
+      margin: auto;
+      width: 350px;
+
+      background: #d96262e3;
+      border-radius: 10px;
+      position: fixed;
+      top: 30%;
+      right: 3%;
+      padding: 0 30px;
+      font-size: 1.5rem;
+      /* display: none; */
+    }
+
+    .scoreboard p,
+    .scoreboard h1 {
+      text-align: left;
+      text-shadow: 0 0 2px white;
+      color: white;
+    }
+
+    .scoreboard h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin: 10px 0 0 0;
+    }
+
+    #img-box {
+      width: 60px;
+      height: 60px;
+    }
+
+    .img {
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      top: 3%;
+      left: 60%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <audio id="bg-music" src="./music/開心背景音樂 jay jay.mp3" autoplay></audio>
+
+  <!-- 遊戲說明 -->
+  <div id="description">
+    <p class="desc-title"> <span><img style="width:50px;height:50px;"
+          src="./images/capoo-smallicon.png"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+      拯救咖波大作戰
+    </p>
+    <p class="desc-article">
+      在某個夜黑風高的夜晚...<br>咖波被惡魔附身變成邪惡咖波了!<br>
+      <br>快使用「快樂魔法藥水<span><img class="potion2" src="./images/potion2.png"></span>&emsp;」幫助咖波恢復可愛吧！
+      <br>
+    <p class="desc-title">
+      <i class="fa-solid fa-triangle-exclamation"></i>&nbsp;注意&nbsp;<i class="fa-solid fa-triangle-exclamation"></i>
+    </p>
+    <p style="text-align: center;">
+      小心別讓恢復正常的可愛咖波再喝到魔法藥水<br>
+      不然可愛咖波會快樂似神仙變成幽靈唷~
+    </p>
+
+    <p class="desc-title">-- <i class="fa-regular fa-file-lines"></i>&nbsp;計分說明 --</p>
+
+    <ul>
+      <li>成功讓邪惡咖波<span><img style="width:30px;height:30px;" src="./images/badcapoo2.png"></span>　　喝下魔法藥水 <u>得 1 分</u>
+      </li>
+      <li>讓可愛咖波<span><img style="width:40px;height:40px;" src="./images/cutecapoo.gif"></span>　　變成幽靈咖波<span><img
+            style="width:40px;height:40px;" src="./images/ghost2.png"></span>　　<u>倒扣 1 分</u></li>
+    </ul>
+    </p>
+    <p class="time-set">限時時間：20秒</p>
+
+    <p>
+      <button type="button" id="btn-start">PLAY <i class="fa-solid fa-play"></i></button>
+      <br>
+    </p>
+  </div>
+  <!-- 遊戲說明 end -->
+
+
+  <p class="time-left"><i class="fa-solid fa-clock-one"></i> 剩餘時間：<span id="text-time">20</span> 秒</p>
+
+  <div position="relative" id="content">
+    <div id="game"></div>
+    <div id="img-box">
+      <img class="img" src="./images/+1.png">
+    </div>
+
+
+    <div>
+      <p>
+        <button type="button" id="btn-restart">再玩一次 <i class="fa-solid fa-play"></i></button>
+        <span>&nbsp;</span>
+        <a href="./小遊戲_拯救咖波大作戰.html"><button type="button" id="btn-index">回首頁 <i
+              class="fa-solid fa-house"></i></button></a>
+      </p>
+    </div>
+
+    <!-- 記分板 -->
+    <div class="scoreboard">
+      <h1>記&emsp;分&emsp;板<br>
+        <span style="font-size: 1.5rem;">SCORE BOARD</span>
+      </h1>
+      <hr style="border: 2px dashed #FFF;">
+      <p><i class=" fa-solid fa-coins"></i> 分數： <span id="text-score">0</span> 分</p>
+      <p><i class="fa-solid fa-user-astronaut"></i> 最高分玩家： <span id="text-highscorename"></span></p>
+      <p><i class="fa-solid fa-crown"></i> 最高分： <span id="text-highscore">0</span> 分</p>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js'
+    integrity='sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=='
+    crossorigin='anonymous'></script>
+  <script>
+
+    $('#game,#btn-restart,.scoreboard,.time-left,#time-time,#btn-index,.img').hide()
+
+    $('#btn-start,#btn-restart').click(function () {
+      $('#description,#btn-index').hide()
+      $('.scoreboard,.time-left,#game').show()
+      $('#text-time').css('display', 'inline-block')
+    })
+
+
+
+    // 分數、剩餘秒數、計時器
+    let score = 0
+    let countdown = 0
+    let timer = 0
+    // 預設遊戲停止/結束
+    let game = false
+
+
+
+
+    //存最高分
+    const storage = JSON.parse(localStorage.getItem('capoogame'))
+    // const storage = JSON.parse(localStorage.capoogame)
+    const highscore = localStorage.capoogame ? JSON.parse(localStorage.capoogame) : { name: '', score: 0 }
+    $('#text-highscorename').text(highscore.name)
+    $('#text-highscore').text(highscore.score)
+
+    function move(capoo) {
+      const top = Math.round(Math.random() * 100) + '%'
+      const left = Math.round(Math.random() * 100) + '%'
+
+      //遞迴
+      capoo.stop().animate({ top, left }, 2000, function () {
+        // 遊戲結束遞迴即停止
+        //當遊戲在進行中，capoo不斷移動
+        if (game) {
+          console.log('123')
+          move(capoo)
+        }
+      })
+    }
+
+
+    // 按下開始按鈕遊戲開始
+    $('#btn-start,#btn-restart').click(function () {
+      // 紀錄遊戲開始
+      game = true
+
+      $('#btn-restart').hide()
+
+      // 重設
+      score = 0
+      $('#text-score').text(score)
+      countdown = 20
+      $('#text-time').text(countdown)
+
+      //開始遊戲
+      timer = setInterval(function () {
+
+        //倒數
+        countdown--
+        $('#text-time').text(countdown)
+
+
+        const random = Math.ceil(Math.random() * 10)
+        if (random > 5 && $('.capoo').length < 5) {
+          const top = Math.round(Math.random() * 100) + '%'
+          const left = Math.round(Math.random() * 100) + '%'
+          const capoo = $(`<img src="./images/badcapoo2.png" class="badcapoo" style="top:${top}; left:${left}">`)
+          $('#game').append(capoo)
+          move(capoo)
+        }
+
+        //時間到
+        if (countdown === 0) {
+
+          //停止倒數
+          clearInterval(timer)
+          // 遊戲結束
+          game = false
+
+          //清空
+          $('#game img').remove()
+          $('#game').fadeOut()
+
+          // $('#btn-restart').show()
+
+
+
+          //disabled true -> 停用 ， false -> 可以用 
+          $('#btn-start').attr('disabled', false)
+
+          if (score > highscore.score) {
+            Swal.fire({
+              icon: 'info',
+              title: '恭喜你刷新了最高分紀錄' + ' <i class="fa-solid fa-trophy"></i>' + '<br>' + '留下你的大名登上風雲榜吧!',
+              inputPlaceholder: '請輸入大名',
+              input: 'text',
+              inputAttributes: {
+                required: true
+              },
+              validationMessage: '名稱必填',
+              //點外面忽略
+              allowOutsideClick: false,
+              //按esc鍵忽略
+              allowEscapeKey: false,
+            }).then(result => {
+              highscore.score = score
+              highscore.name = result.value
+              $('#text-highscorename').text(highscore.name)
+              $('#text-highscore').text(highscore.score)
+
+              localStorage.capoogame = JSON.stringify(highscore)
+            })
+
+          } else {
+            Swal.fire({
+              icon: 'info',
+              title: '時間到，遊戲結束',
+              text: `你得到 ${score} 分`
+            })
+          }
+
+          //點alert的OK鍵，才會顯示再玩一次按鈕
+          $('.swal2-actions').click(function () {
+            $('#btn-restart,#btn-index').show()
+          })
+
+          // if (score > highscore.score) {
+          //   highscore.score = score
+          //   highscore.name = prompt('最高分，請輸入名字') || '路人甲'
+          //   $('#text-highscorename').text(highscore.name)
+          //   $('#text-highscore').text(highscore.score)
+
+          //   localStorage.setItem('capoogame', JSON.stringify(highscore))
+          //   //highscore 是變數的物件，要用stringfy將它轉成文字來放
+          //   // localStorage.capoogame = JSON.stringify(highscore)
+          // }
+        }
+      }, 1000)
+    })
+
+    $('#game').on('click', '.badcapoo', function () {
+
+      // 加減分紀錄
+      $('.img').attr('src', './images/+1.png').show()
+      setTimeout(() => {
+        $('.img').hide()
+      }, 300)
+
+      //圖片置換為 ./images/cutecapoo.png
+      $(this).attr('src', './images/cutecapoo.gif')
+      $(this).removeClass('badcapoo').addClass('cutecapoo')
+      // $(this).stop()
+      score++
+      $('#text-score').text(score)
+    })
+
+    $('#game').on('click', '.cutecapoo', function () {
+
+      // 加減分紀錄
+      $('.img').attr('src', './images/-1.png').show()
+      setTimeout(() => {
+        $('.img').hide()
+      }, 300)
+
+      //圖片置換為 ./images/ghost2.png
+      $(this).attr('src', './images/ghost2.png')
+      $(this).removeClass('cutecapoo').addClass('ghost2')
+      // $(this).stop()
+      score--
+      $('#text-score').text(score)
+    })
+
+  </script>
+</body>
+
+</html>
